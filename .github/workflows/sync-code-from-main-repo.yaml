@@ -1,0 +1,45 @@
+name: Create Pull Request from upstream
+
+on:
+  schedule:
+    - cron: '0 * * * *'  # Chạy mỗi giờ, bạn có thể điều chỉnh lịch trình này
+
+jobs:
+  create-pull-request:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Đảm bảo lấy toàn bộ lịch sử
+          ref: main
+
+      - name: Setup Git
+        run: |
+          git config user.name 'Your GitHub Username'
+          git config user.email 'your-email@example.com'
+
+      - name: Add remote upstream
+        run: git remote add upstream https://github.com/original-owner/project.git
+
+      - name: Fetch changes from upstream
+        run: git fetch upstream
+
+      - name: Checkout to a new branch
+        run: |
+          git checkout -b update-upstream-$(date +'%Y-%m-%d-%H-%M-%S')
+
+      - name: Merge changes
+        run: |
+          git merge --no-edit upstream/main
+
+      - name: Push to GitHub
+        run: git push origin HEAD
+
+      - name: Create Pull Request
+        uses: repo-sync/pull-request@v3
+        with:
+          github_token: ${{ secrets.GIT_TOKEN }}
+          pr_title: 'Sync with upstream'
+          pr_body: 'Updating the repository with changes from upstream'
+          pr_label: 'sync,automated pr'
