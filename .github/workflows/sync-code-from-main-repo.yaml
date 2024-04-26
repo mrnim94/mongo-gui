@@ -16,11 +16,11 @@ jobs:
 
       - name: Setup Git
         run: |
-          git config user.name 'Your GitHub Username'
-          git config user.email 'your-email@example.com'
+          git config user.name 'MR Nim (Github Action)'
+          git config user.email 'mr.nim94@gmail.com'
 
       - name: Add remote upstream
-        run: git remote add upstream https://github.com/original-owner/project.git
+        run: git remote add upstream https://github.com/arunbandari/mongo-gui.git
 
       - name: Fetch changes from upstream
         run: git fetch upstream
@@ -31,15 +31,18 @@ jobs:
 
       - name: Merge changes
         run: |
-          git merge --no-edit upstream/main
+          git merge --no-edit upstream/master
 
       - name: Push to GitHub
         run: git push origin HEAD
 
       - name: Create Pull Request
-        uses: repo-sync/pull-request@v3
+        uses: peter-evans/create-pull-request@v3
         with:
-          github_token: ${{ secrets.GIT_TOKEN }}
-          pr_title: 'Sync with upstream'
-          pr_body: 'Updating the repository with changes from upstream'
-          pr_label: 'sync,automated pr'
+          token: ${{ secrets.GIT_TOKEN }}
+          commit-message: Update from upstream
+          title: 'Sync with upstream'
+          body: 'Updating the repository with changes from upstream'
+          branch: ${{ github.head_ref }}
+          delete-branch: true
+          labels: sync,automated pr
