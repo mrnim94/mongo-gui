@@ -2,7 +2,7 @@ name: Create Pull Request from upstream
 
 on:
   schedule:
-    - cron: '0 * * * *'  # Chạy mỗi giờ, bạn có thể điều chỉnh lịch trình này
+    - cron: '0 * * * *'  # Runs every hour, you can adjust this schedule
 
 jobs:
   create-pull-request:
@@ -11,7 +11,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0  # Đảm bảo lấy toàn bộ lịch sử
+          fetch-depth: 0  # Ensures the full history is fetched
           ref: master
 
       - name: Setup Git
@@ -27,14 +27,16 @@ jobs:
 
       - name: Checkout to a new branch
         run: |
-          git checkout -b update-upstream-$(date +'%Y-%m-%d-%H-%M-%S')
+          BRANCH_NAME="update-upstream-$(date +'%Y-%m-%d-%H-%M-%S')"
+          echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
+          git checkout -b $BRANCH_NAME
 
       - name: Merge changes
         run: |
           git merge --no-edit upstream/master
 
       - name: Push to GitHub
-        run: git push origin HEAD
+        run: git push origin $BRANCH_NAME
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v3
@@ -43,6 +45,6 @@ jobs:
           commit-message: Update from upstream
           title: 'Sync with upstream'
           body: 'Updating the repository with changes from upstream'
-          branch: ${{ github.head_ref }}
+          branch: ${{ env.BRANCH_NAME }}
           delete-branch: true
           labels: sync,automated pr
