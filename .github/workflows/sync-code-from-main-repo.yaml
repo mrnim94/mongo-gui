@@ -39,12 +39,13 @@ jobs:
         run: git push origin $BRANCH_NAME
 
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v3
+        uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.GIT_TOKEN }}
           commit-message: Update from upstream
           title: 'Sync with upstream'
           body: 'Updating the repository with changes from upstream'
           branch: ${{ env.BRANCH_NAME }}
+          base: master
           delete-branch: true
           labels: sync,automated pr
