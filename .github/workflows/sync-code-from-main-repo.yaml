@@ -2,7 +2,7 @@ name: Create Pull Request from upstream
 
 on:
   schedule:
-    - cron: ''0 0 * * *''  # Runs every hour, you can adjust this schedule
+    - cron: '0 0 * * *'
 
 jobs:
   create-pull-request:
