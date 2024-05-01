@@ -19,10 +19,10 @@ jobs:
         node-version: '18'
 
 
-    - name: Publish to npm
-      run: |
-        git config user.name "Arun Bandari"
-        git config user.email "arunbandari2@gmail.com"
-        npm publish --access public
-      env:
-        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+    # - name: Publish to npm
+    #   run: |
+    #     git config user.name "Arun Bandari"
+    #     git config user.email "arunbandari2@gmail.com"
+    #     npm publish --access public
+    #   env:
+    #     NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
